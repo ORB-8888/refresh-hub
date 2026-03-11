@@ -10,26 +10,26 @@ const contactInfo = [
     label: 'Visit Us',
     value: 'Merab Aleksidze St. 12',
     sub: 'Tbilisi, Georgia 0171',
-    href: 'https://maps.google.com/?q=Merab+Aleksidze+St.+12,+Tbilisi,+Georgia+0171',
+    href: 'https://www.google.com/maps?q=Refresh+Luxury+Hub,+12+Merab+Aleksidze+St,+Tbilisi+0171&ftid=0x404473e45ba98c55:0xe9cd67f79c7f37e9',
   },
   {
     icon: Phone,
     label: 'Call Us',
     value: '+995 557 12 40 00',
-    sub: 'Mon — Sat, 10:00 — 19:00',
+    sub: 'Mon — Sat, 12:00 — 20:00',
     href: 'tel:+995557124000',
   },
   {
     icon: EnvelopeSimple,
     label: 'Email Us',
-    value: 'contact@refresh-hub.com',
+    value: 'info@refresh-hub.com',
     sub: 'We reply within 24 hours',
-    href: 'mailto:contact@refresh-hub.com',
+    href: 'mailto:info@refresh-hub.com',
   },
   {
     icon: WhatsappLogo,
     label: 'WhatsApp',
-    value: 'Message Us',
+    value: 'Contact Us',
     sub: 'Quick response guaranteed',
     href: 'https://wa.me/995557124000',
   },
@@ -93,7 +93,7 @@ export default function Contact() {
         >
           <iframe
             title="Office Location"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2978.5!2d44.793!3d41.7151!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDQyJzU0LjQiTiA0NMKwNDcnMzQuOCJF!5e0!3m2!1sen!2sge!4v1"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2978.5!2d44.793!3d41.7151!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x404473e45ba98c55%3A0xe9cd67f79c7f37e9!2sRefresh%20Luxury%20Hub!5e0!3m2!1sen!2sge!4v1"
             width="100%"
             height="300"
             style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) brightness(0.95) contrast(0.9)' }}
