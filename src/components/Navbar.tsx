@@ -32,8 +32,9 @@ export default function Navbar() {
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       >
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
-          <a href="#" className="flex items-center gap-3">
-            <img src="/logo.png" alt="Refresh" className="h-10 w-auto" />
+          <a href="#" className="flex items-center gap-2">
+            <span className="text-base font-bold tracking-wide text-white">REFRESH</span>
+            <span className="hidden text-[10px] tracking-[0.15em] uppercase text-white/40 sm:block">Luxury Real Estate</span>
           </a>
 
           <div className="hidden items-center gap-8 md:flex">

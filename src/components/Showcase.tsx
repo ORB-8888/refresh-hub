@@ -10,6 +10,7 @@ function AutoScrollCarousel() {
   const [playingVideo, setPlayingVideo] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
   const dragStart = useRef({ x: 0, scrollLeft: 0 })
+  const hasDragged = useRef(false)
   const [validVideos, setValidVideos] = useState(allVideos)
 
   // Filter out videos without thumbnails
@@ -88,6 +89,7 @@ function AutoScrollCarousel() {
     const el = scrollRef.current
     if (!el) return
     setIsDragging(true)
+    hasDragged.current = false
     dragStart.current = { x: e.pageX, scrollLeft: el.scrollLeft }
   }
 
@@ -95,10 +97,17 @@ function AutoScrollCarousel() {
     if (!isDragging) return
     const el = scrollRef.current
     if (!el) return
-    el.scrollLeft = dragStart.current.scrollLeft - (e.pageX - dragStart.current.x)
+    const dx = e.pageX - dragStart.current.x
+    if (Math.abs(dx) > 5) hasDragged.current = true
+    el.scrollLeft = dragStart.current.scrollLeft - dx
   }
 
   const onMouseUp = () => setIsDragging(false)
+
+  const handleVideoClick = (videoId: string) => {
+    if (hasDragged.current) return
+    setPlayingVideo(videoId)
+  }
 
   const items = [...validVideos, ...validVideos]
 
@@ -133,7 +142,7 @@ function AutoScrollCarousel() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
               <button
-                onClick={() => setPlayingVideo(video.id)}
+                onClick={() => handleVideoClick(video.id)}
                 className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100"
               >
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/90 text-primary-foreground shadow-lg transition-transform duration-300 hover:scale-110">
