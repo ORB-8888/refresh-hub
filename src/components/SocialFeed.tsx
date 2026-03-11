@@ -1,6 +1,6 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
-import { InstagramLogo, FacebookLogo, TiktokLogo, XLogo, YoutubeLogo } from '@phosphor-icons/react'
+import { InstagramLogo, FacebookLogo, TiktokLogo } from '@phosphor-icons/react'
 
 const ease = [0.22, 1, 0.36, 1] as const
 
@@ -29,60 +29,43 @@ const socialLinks = [
     color: 'oklch(0.75 0.15 170)',
     description: 'Watch property tours, behind-the-scenes, and real estate tips.',
   },
-  {
-    name: 'YouTube',
-    icon: YoutubeLogo,
-    url: 'https://www.youtube.com/@refreshhub',
-    handle: '@refreshhub',
-    color: 'oklch(0.60 0.22 30)',
-    description: 'Property walkthroughs, neighborhood tours, and market analysis.',
-  },
-  {
-    name: 'X / Twitter',
-    icon: XLogo,
-    url: 'https://x.com/RefreshHub',
-    handle: '@RefreshHub',
-    color: 'oklch(0.85 0.01 260)',
-    description: 'Real-time market updates and luxury real estate insights.',
-  },
 ]
 
 export default function SocialFeed() {
   const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-100px' })
+  const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section id="gallery" className="relative px-6 py-24 sm:py-32" ref={ref}>
+    <section className="relative px-6 py-14 sm:py-20" ref={ref}>
       <div className="absolute left-1/2 top-0 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-border to-transparent" />
 
       <div className="mx-auto max-w-6xl">
         <motion.div
-          className="mb-16 text-center"
-          initial={{ opacity: 0, y: 30 }}
+          className="mb-8 text-center sm:mb-12"
+          initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, ease }}
         >
-          <span className="mb-4 inline-block text-sm font-medium uppercase tracking-[0.2em] text-primary">
+          <span className="mb-3 inline-block text-sm font-medium uppercase tracking-[0.2em] text-primary">
             Follow Us
           </span>
-          <h2 className="mb-4 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+          <h2 className="mb-3 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
             Stay <span className="text-gradient-gold">Connected</span>
           </h2>
-          <p className="mx-auto max-w-lg text-muted-foreground">
-            Follow our social channels for the latest luxury property showcases, market insights, and exclusive content.
+          <p className="mx-auto max-w-lg text-sm text-muted-foreground sm:text-base">
+            Follow our social channels for the latest luxury property showcases and exclusive content.
           </p>
         </motion.div>
 
-        {/* Social link cards */}
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        <div className="grid gap-4 sm:grid-cols-3">
           {socialLinks.map((social, i) => (
             <motion.a
               key={social.name}
               href={social.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative overflow-hidden rounded-xl border border-border/50 bg-card p-6 transition-all duration-500 hover:border-primary/20 hover:bg-card-hover"
-              initial={{ opacity: 0, y: 30 }}
+              className="group relative overflow-hidden rounded-xl border border-border/50 bg-card p-5 transition-all duration-500 hover:border-primary/20 hover:bg-card-hover sm:p-6"
+              initial={{ opacity: 0, y: 24 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.1 * i, ease }}
             >
@@ -92,13 +75,13 @@ export default function SocialFeed() {
               />
               <div className="relative z-10">
                 <social.icon
-                  size={32}
+                  size={30}
                   weight="duotone"
-                  className="mb-4 transition-colors duration-300"
+                  className="mb-3 transition-colors duration-300"
                   style={{ color: social.color }}
                 />
                 <h3 className="mb-1 font-semibold">{social.name}</h3>
-                <p className="mb-3 text-xs text-muted-foreground">{social.handle}</p>
+                <p className="mb-2 text-xs text-muted-foreground">{social.handle}</p>
                 <p className="text-sm leading-relaxed text-muted-foreground">{social.description}</p>
               </div>
             </motion.a>

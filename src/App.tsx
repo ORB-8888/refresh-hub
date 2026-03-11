@@ -4,6 +4,7 @@ import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import About from './components/About'
 import Services from './components/Services'
+import Showcase from './components/Showcase'
 import SocialFeed from './components/SocialFeed'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
@@ -20,11 +21,11 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
     >
-      <motion.div className="flex flex-col items-center gap-6">
+      <motion.div className="flex flex-col items-center gap-8">
         <motion.img
           src="/logo.png"
           alt="Refresh"
-          className="h-20 w-auto"
+          className="h-36 w-auto sm:h-44"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
@@ -32,7 +33,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
         <motion.div
           className="h-[1px] bg-gradient-to-r from-transparent via-primary to-transparent"
           initial={{ width: 0 }}
-          animate={{ width: 200 }}
+          animate={{ width: 240 }}
           transition={{ duration: 1.4, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
         />
       </motion.div>
@@ -59,6 +60,7 @@ export default function App() {
           <Hero />
           <About />
           <Services />
+          <Showcase />
           <SocialFeed />
           <Contact />
           <Footer />

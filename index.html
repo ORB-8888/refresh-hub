@@ -13,16 +13,24 @@
     <meta property="og:url" content="https://refresh-hub.com" />
     <meta property="og:image" content="https://refresh-hub.com/logo.png" />
 
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@RefreshHub" />
-    <meta name="twitter:title" content="REFRESH — International Luxury Real Estate Hub" />
-    <meta name="twitter:description" content="Premium apartments, penthouses and villas. Exclusive listings." />
-
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+    <!-- Preload YouTube API for faster video start -->
+    <link rel="preconnect" href="https://www.youtube.com" />
+    <link rel="preconnect" href="https://i.ytimg.com" />
+    <script>
+      // Start loading YouTube IFrame API immediately
+      var tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      window.__ytApiReady = new Promise(function(resolve) {
+        window.onYouTubeIframeAPIReady = function() { resolve(); };
+      });
+    </script>
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/logo.png" />
@@ -49,8 +57,7 @@
       "sameAs": [
         "https://www.facebook.com/RefreshLuxuryRealEstateHub/",
         "https://www.instagram.com/refresh_luxury_hub/",
-        "https://tiktok.com/@refreshhub",
-        "https://x.com/RefreshHub"
+        "https://tiktok.com/@refreshhub"
       ]
     }
     </script>

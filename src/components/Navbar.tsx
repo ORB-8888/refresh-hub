@@ -24,16 +24,16 @@ export default function Navbar() {
       <motion.nav
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
           scrolled
-            ? 'bg-background/80 backdrop-blur-xl border-b border-border/50'
-            : 'bg-transparent'
+            ? 'bg-background/90 backdrop-blur-xl border-b border-border/50'
+            : 'bg-black/40 backdrop-blur-md'
         }`}
         initial={{ y: -80 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       >
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
           <a href="#" className="flex items-center gap-3">
-            <img src="/logo.png" alt="Refresh" className="h-8 w-auto" />
+            <img src="/logo.png" alt="Refresh" className="h-7 w-auto" />
           </a>
 
           <div className="hidden items-center gap-8 md:flex">
@@ -41,14 +41,14 @@ export default function Navbar() {
               <a
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium tracking-wide text-muted-foreground transition-colors duration-300 hover:text-primary"
+                className="text-sm font-medium tracking-wide text-white/80 transition-colors duration-300 hover:text-white"
               >
                 {link.label}
               </a>
             ))}
             <a
               href="#contact"
-              className="rounded-lg border border-primary/30 bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition-all duration-300 hover:bg-primary/20 hover:shadow-[0_0_20px_oklch(0.75_0.12_85_/_0.2)]"
+              className="rounded-lg border border-primary/30 bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary transition-all duration-300 hover:bg-primary/20 hover:shadow-[0_0_20px_oklch(0.75_0.12_85_/_0.2)]"
             >
               Get in Touch
             </a>
@@ -56,7 +56,7 @@ export default function Navbar() {
 
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="text-foreground md:hidden"
+            className="text-white md:hidden"
             aria-label="Toggle menu"
           >
             {mobileOpen ? <X size={24} /> : <List size={24} />}

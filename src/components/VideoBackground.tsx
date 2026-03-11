@@ -21,6 +21,7 @@ declare global {
       }
     }
     onYouTubeIframeAPIReady: () => void
+    __ytApiReady?: Promise<void>
   }
 }
 
@@ -32,26 +33,18 @@ interface YTPlayer {
   destroy: () => void
 }
 
-let apiLoadPromise: Promise<void> | null = null
-
-const loadYouTubeAPI = (): Promise<void> => {
-  if (apiLoadPromise) return apiLoadPromise
-
-  apiLoadPromise = new Promise((resolve) => {
-    if (window.YT?.Player) {
-      resolve()
-      return
-    }
-
-    const tag = document.createElement('script')
-    tag.src = 'https://www.youtube.com/iframe_api'
-    const first = document.getElementsByTagName('script')[0]
-    first.parentNode?.insertBefore(tag, first)
-
-    window.onYouTubeIframeAPIReady = () => resolve()
+// Use the preloaded API promise from index.html, or load it as fallback
+const waitForYouTubeAPI = (): Promise<void> => {
+  if (window.YT?.Player) return Promise.resolve()
+  if (window.__ytApiReady) return window.__ytApiReady
+  return new Promise((resolve) => {
+    const check = setInterval(() => {
+      if (window.YT?.Player) {
+        clearInterval(check)
+        resolve()
+      }
+    }, 50)
   })
-
-  return apiLoadPromise
 }
 
 interface Props {
@@ -89,6 +82,7 @@ export default function VideoBackground({ videos }: Props) {
           disablekb: 1,
           fs: 0,
           iv_load_policy: 3,
+          origin: window.location.origin,
         },
         events: {
           onReady: (event) => {
@@ -98,7 +92,6 @@ export default function VideoBackground({ videos }: Props) {
               p.playVideo()
               setReady(true)
             } else {
-              // Preload by briefly playing then pausing
               p.playVideo()
               setTimeout(() => {
                 if (currentIndexRef.current !== index) p.pauseVideo()
@@ -125,19 +118,16 @@ export default function VideoBackground({ videos }: Props) {
     let cancelled = false
 
     const init = async () => {
-      await loadYouTubeAPI()
+      await waitForYouTubeAPI()
       if (cancelled) return
-
-      // Create first player immediately
       createPlayer(videos[0], 0)
 
-      // Load rest after short delay
       setTimeout(() => {
         if (cancelled) return
         for (let i = 1; i < videos.length; i++) {
           createPlayer(videos[i], i)
         }
-      }, 1000)
+      }, 800)
     }
 
     init()
@@ -145,17 +135,12 @@ export default function VideoBackground({ videos }: Props) {
     return () => {
       cancelled = true
       playersRef.current.forEach((p) => {
-        try {
-          p.destroy()
-        } catch {
-          /* ignore */
-        }
+        try { p.destroy() } catch { /* ignore */ }
       })
       playersRef.current.clear()
     }
   }, [videos, createPlayer])
 
-  // Switch videos
   useEffect(() => {
     videos.forEach((_, index) => {
       const player = playersRef.current.get(index)
@@ -168,26 +153,19 @@ export default function VideoBackground({ videos }: Props) {
         } else {
           player.pauseVideo()
         }
-      } catch {
-        /* not ready */
-      }
+      } catch { /* not ready */ }
     })
   }, [currentIndex, videos])
 
   return (
     <div className="absolute inset-0 overflow-hidden">
-      {/* Dark overlay */}
       <div className="absolute inset-0 z-10 bg-black/65" />
-
-      {/* Gradient fade at bottom for smooth transition to content below */}
       <div className="absolute bottom-0 left-0 right-0 z-10 h-32 bg-gradient-to-t from-background to-transparent" />
 
       {videos.map((_, index) => (
         <motion.div
           key={index}
-          ref={(el) => {
-            if (el) containersRef.current.set(index, el)
-          }}
+          ref={(el) => { if (el) containersRef.current.set(index, el) }}
           className="absolute pointer-events-none [&>div]:!absolute [&>div]:!top-1/2 [&>div]:!left-1/2 [&>div]:!min-w-full [&>div]:!min-h-full [&>div]:!w-[177.78vh] [&>div]:!h-screen [&>div]:![transform:translate(-50%,-50%)_scale(1.2)] [&>iframe]:!w-full [&>iframe]:!h-full"
           style={{
             top: '50%',
