@@ -32,12 +32,12 @@ function LoadingScreen() {
           transition={{ duration: 1.4, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
         />
         <motion.p
-          className="text-xs tracking-[0.3em] uppercase text-muted-foreground"
+          className="text-xs tracking-[0.25em] uppercase text-muted-foreground"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 0.6 }}
+          transition={{ delay: 0.8, duration: 0.6 }}
         >
-          Loading experience
+          Exclusive listings &bull; Expert negotiation
         </motion.p>
       </motion.div>
     </motion.div>
@@ -50,8 +50,14 @@ export default function App() {
   const loading = !videoReady || !minTimePassed
 
   useEffect(() => {
-    const timer = setTimeout(() => setMinTimePassed(true), 2000)
+    const timer = setTimeout(() => setMinTimePassed(true), 1800)
     return () => clearTimeout(timer)
+  }, [])
+
+  // Fallback: if video never loads (ad blocker etc), show site after 5s
+  useEffect(() => {
+    const fallback = setTimeout(() => setVideoReady(true), 5000)
+    return () => clearTimeout(fallback)
   }, [])
 
   const onVideoReady = useCallback(() => setVideoReady(true), [])
@@ -62,7 +68,7 @@ export default function App() {
         {loading && <LoadingScreen />}
       </AnimatePresence>
 
-      {/* Always render Hero so video starts loading immediately */}
+      {/* Always render Hero so video preloads immediately */}
       <div style={{ visibility: loading ? 'hidden' : 'visible', position: loading ? 'fixed' : 'relative', inset: 0 }}>
         <Navbar />
         <Hero onVideoReady={onVideoReady} />

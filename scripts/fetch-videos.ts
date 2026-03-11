@@ -1,7 +1,7 @@
 /**
- * Fetches all video IDs from the Refresh Hub YouTube channel RSS feed.
+ * Fetches all videos from the Refresh Hub YouTube channel RSS feed.
+ * Auto-detects Shorts vs regular videos via oEmbed dimensions.
  * Runs at build time — no API key needed.
- * When new videos are uploaded to YouTube, just rebuild to pick them up.
  */
 
 const CHANNEL_ID = 'UCh6F73uH3ELH0kZI5kwMGTw'
@@ -11,6 +11,21 @@ interface Video {
   id: string
   title: string
   thumbnail: string
+  type: 'video' | 'short'
+}
+
+async function detectType(videoId: string): Promise<'video' | 'short'> {
+  try {
+    const res = await fetch(
+      `https://www.youtube.com/oembed?url=https://www.youtube.com/shorts/${videoId}&format=json`,
+    )
+    if (!res.ok) return 'video'
+    const data = await res.json()
+    // Shorts have portrait dimensions (height > width)
+    return data.height > data.width ? 'short' : 'video'
+  } catch {
+    return 'video'
+  }
 }
 
 async function fetchVideos(): Promise<void> {
@@ -24,18 +39,27 @@ async function fetchVideos(): Promise<void> {
 
   const xml = await res.text()
 
-  // Parse video IDs
   const idMatches = [...xml.matchAll(/<yt:videoId>([^<]+)<\/yt:videoId>/g)]
-  // Parse titles
   const titleMatches = [...xml.matchAll(/<media:title>([^<]+)<\/media:title>/g)]
 
-  const videos: Video[] = idMatches.map((match, i) => ({
-    id: match[1],
-    title: titleMatches[i]?.[1] ?? `Property Video ${i + 1}`,
-    thumbnail: `https://img.youtube.com/vi/${match[1]}/maxresdefault.jpg`,
-  }))
+  console.log(`Found ${idMatches.length} videos, detecting types...`)
 
-  console.log(`Found ${videos.length} videos`)
+  const videos: Video[] = await Promise.all(
+    idMatches.map(async (match, i) => {
+      const id = match[1]
+      const type = await detectType(id)
+      return {
+        id,
+        title: titleMatches[i]?.[1] ?? `Property Video ${i + 1}`,
+        thumbnail: `https://img.youtube.com/vi/${id}/maxresdefault.jpg`,
+        type,
+      }
+    }),
+  )
+
+  const regulars = videos.filter((v) => v.type === 'video')
+  const shorts = videos.filter((v) => v.type === 'short')
+  console.log(`  ${regulars.length} regular videos, ${shorts.length} shorts`)
 
   const outPath = new URL('../src/data/videos.json', import.meta.url).pathname
   await Bun.write(outPath, JSON.stringify(videos, null, 2) + '\n')

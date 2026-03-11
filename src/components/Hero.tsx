@@ -5,8 +5,8 @@ import videos from '../data/videos.json'
 
 const ease = [0.22, 1, 0.36, 1] as const
 
-// Use all channel videos for the background — auto-updates on rebuild
-const backgroundVideos = videos.map((v) => v.id)
+// Hero: only regular videos (not shorts) — auto-updates when new videos uploaded
+const heroVideos = videos.filter((v) => v.type === 'video').map((v) => v.id)
 
 const stagger = {
   hidden: {},
@@ -25,7 +25,7 @@ interface Props {
 export default function Hero({ onVideoReady }: Props) {
   return (
     <section className="relative flex h-[100dvh] items-center justify-center overflow-hidden">
-      <VideoBackground videos={backgroundVideos} onReady={onVideoReady} />
+      <VideoBackground videos={heroVideos} onReady={onVideoReady} />
 
       <motion.div
         className="relative z-20 mx-auto flex max-w-4xl flex-col items-center px-5 pt-14 text-center"
@@ -33,7 +33,7 @@ export default function Hero({ onVideoReady }: Props) {
         initial="hidden"
         animate="show"
       >
-        {/* Logo — raw, no wrapper, already circular with transparent bg */}
+        {/* Logo — raw, already circular */}
         <motion.div variants={fadeUp} className="mb-4 sm:mb-6">
           <img src="/logo.png" alt="Refresh" className="h-24 w-24 sm:h-36 sm:w-36" />
         </motion.div>
@@ -95,7 +95,6 @@ export default function Hero({ onVideoReady }: Props) {
         </motion.div>
       </motion.div>
 
-      {/* Scroll indicator */}
       <motion.a
         href="#about"
         className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-1"

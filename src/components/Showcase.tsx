@@ -1,7 +1,7 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef, useEffect, useState } from 'react'
 import { Play } from '@phosphor-icons/react'
-import videos from '../data/videos.json'
+import allVideos from '../data/videos.json'
 
 const ease = [0.22, 1, 0.36, 1] as const
 
@@ -10,15 +10,49 @@ function AutoScrollCarousel() {
   const [playingVideo, setPlayingVideo] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
   const dragStart = useRef({ x: 0, scrollLeft: 0 })
+  const [validVideos, setValidVideos] = useState(allVideos)
 
-  // Auto-scroll animation
+  // Filter out videos without thumbnails
+  useEffect(() => {
+    let cancelled = false
+
+    async function checkThumbnails() {
+      const results = await Promise.all(
+        allVideos.map(async (video) => {
+          try {
+            const img = new Image()
+            const loaded = await new Promise<boolean>((resolve) => {
+              img.onload = () => {
+                // YouTube returns a 120x90 gray placeholder if no maxres thumbnail
+                resolve(img.naturalWidth > 200)
+              }
+              img.onerror = () => resolve(false)
+              img.src = video.thumbnail
+            })
+            return loaded ? video : null
+          } catch {
+            return null
+          }
+        }),
+      )
+      if (!cancelled) {
+        const filtered = results.filter(Boolean) as typeof allVideos
+        if (filtered.length > 0) setValidVideos(filtered)
+      }
+    }
+
+    checkThumbnails()
+    return () => { cancelled = true }
+  }, [])
+
+  // Auto-scroll — faster speed
   useEffect(() => {
     const el = scrollRef.current
     if (!el) return
 
     let animationId: number
     let scrollPos = el.scrollLeft
-    const speed = 0.4
+    const speed = 1.0
     let paused = false
 
     const scroll = () => {
@@ -47,7 +81,7 @@ function AutoScrollCarousel() {
       el.removeEventListener('touchstart', pause)
       el.removeEventListener('touchend', resume)
     }
-  }, [])
+  }, [validVideos])
 
   // Drag-to-scroll
   const onMouseDown = (e: React.MouseEvent) => {
@@ -61,52 +95,57 @@ function AutoScrollCarousel() {
     if (!isDragging) return
     const el = scrollRef.current
     if (!el) return
-    const dx = e.pageX - dragStart.current.x
-    el.scrollLeft = dragStart.current.scrollLeft - dx
+    el.scrollLeft = dragStart.current.scrollLeft - (e.pageX - dragStart.current.x)
   }
 
   const onMouseUp = () => setIsDragging(false)
 
-  // Duplicate items for infinite loop
-  const items = [...videos, ...videos]
+  const items = [...validVideos, ...validVideos]
 
   return (
     <>
       <div
         ref={scrollRef}
-        className="flex gap-4 overflow-x-auto px-6 scrollbar-hide"
-        style={{ scrollBehavior: 'auto', cursor: isDragging ? 'grabbing' : 'grab', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        className="flex gap-3 overflow-x-auto px-6 scrollbar-hide sm:gap-4"
+        style={{ scrollBehavior: 'auto', cursor: isDragging ? 'grabbing' : 'grab' }}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}
         onMouseLeave={onMouseUp}
       >
-        {items.map((video, i) => (
-          <div
-            key={`${video.id}-${i}`}
-            className="group relative aspect-video w-[280px] flex-shrink-0 overflow-hidden rounded-xl sm:w-[380px]"
-          >
-            <img
-              src={video.thumbnail}
-              alt={video.title}
-              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-              loading="lazy"
-              draggable={false}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-            <button
-              onClick={() => setPlayingVideo(video.id)}
-              className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        {items.map((video, i) => {
+          const isShort = video.type === 'short'
+          return (
+            <div
+              key={`${video.id}-${i}`}
+              className={`group relative flex-shrink-0 overflow-hidden rounded-xl ${
+                isShort
+                  ? 'aspect-[9/16] w-[180px] sm:w-[220px]'
+                  : 'aspect-video w-[280px] sm:w-[380px]'
+              }`}
             >
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/90 text-primary-foreground shadow-lg transition-transform duration-300 hover:scale-110">
-                <Play size={24} weight="fill" />
+              <img
+                src={video.thumbnail}
+                alt={video.title}
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy"
+                draggable={false}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+              <button
+                onClick={() => setPlayingVideo(video.id)}
+                className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+              >
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/90 text-primary-foreground shadow-lg transition-transform duration-300 hover:scale-110">
+                  <Play size={20} weight="fill" />
+                </div>
+              </button>
+              <div className="absolute bottom-2 left-3 right-3">
+                <p className="line-clamp-2 text-xs font-medium text-white/90">{video.title}</p>
               </div>
-            </button>
-            <div className="absolute bottom-3 left-4 right-4">
-              <p className="line-clamp-2 text-sm font-medium text-white/90">{video.title}</p>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
 
       {/* Video modal */}
