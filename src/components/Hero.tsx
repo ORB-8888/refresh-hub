@@ -1,10 +1,12 @@
 import { motion } from 'framer-motion'
 import { CaretDown } from '@phosphor-icons/react'
 import VideoBackground from './VideoBackground'
+import videos from '../data/videos.json'
 
 const ease = [0.22, 1, 0.36, 1] as const
 
-const backgroundVideos = ['0Jg4ntu9iFU', '_jNsxPWiDms', 'CKBiUs_DPpc']
+// Use all channel videos for the background — auto-updates on rebuild
+const backgroundVideos = videos.map((v) => v.id)
 
 const stagger = {
   hidden: {},
@@ -16,10 +18,14 @@ const fadeUp = {
   show: { opacity: 1, y: 0, transition: { duration: 0.7, ease } },
 }
 
-export default function Hero() {
+interface Props {
+  onVideoReady?: () => void
+}
+
+export default function Hero({ onVideoReady }: Props) {
   return (
     <section className="relative flex h-[100dvh] items-center justify-center overflow-hidden">
-      <VideoBackground videos={backgroundVideos} />
+      <VideoBackground videos={backgroundVideos} onReady={onVideoReady} />
 
       <motion.div
         className="relative z-20 mx-auto flex max-w-4xl flex-col items-center px-5 pt-14 text-center"
@@ -27,11 +33,9 @@ export default function Hero() {
         initial="hidden"
         animate="show"
       >
-        {/* Logo in circle */}
+        {/* Logo — raw, no wrapper, already circular with transparent bg */}
         <motion.div variants={fadeUp} className="mb-4 sm:mb-6">
-          <div className="flex h-20 w-20 items-center justify-center rounded-full border border-white/15 bg-black/40 p-4 backdrop-blur-sm sm:h-28 sm:w-28 sm:p-5">
-            <img src="/logo.png" alt="Refresh" className="h-full w-full object-contain" />
-          </div>
+          <img src="/logo.png" alt="Refresh" className="h-24 w-24 sm:h-36 sm:w-36" />
         </motion.div>
 
         <motion.div variants={fadeUp} className="mb-3 sm:mb-4">
@@ -91,7 +95,7 @@ export default function Hero() {
         </motion.div>
       </motion.div>
 
-      {/* Scroll indicator — always visible at bottom */}
+      {/* Scroll indicator */}
       <motion.a
         href="#about"
         className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-1"

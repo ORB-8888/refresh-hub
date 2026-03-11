@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "bunx --bun vite",
     "start": "bunx --bun vite",
-    "build": "bunx --bun vite build",
+    "fetch-videos": "bun run scripts/fetch-videos.ts",
+    "build": "bun run fetch-videos && bunx --bun vite build",
     "preview": "bunx --bun vite preview",
     "lint": "eslint .",
     "type-check": "tsc --noEmit"

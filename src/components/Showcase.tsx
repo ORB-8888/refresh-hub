@@ -1,59 +1,44 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef, useEffect, useState } from 'react'
 import { Play } from '@phosphor-icons/react'
+import videos from '../data/videos.json'
 
 const ease = [0.22, 1, 0.36, 1] as const
-
-const videos = [
-  { id: '0Jg4ntu9iFU', title: 'Luxury Property Tour' },
-  { id: '_jNsxPWiDms', title: 'Premium Penthouse Showcase' },
-  { id: 'CKBiUs_DPpc', title: 'Exclusive Villa Walkthrough' },
-]
-
-// Use YouTube thumbnails as gallery images — zero maintenance
-const galleryImages = [
-  ...videos.map((v) => ({
-    src: `https://img.youtube.com/vi/${v.id}/maxresdefault.jpg`,
-    alt: v.title,
-    videoId: v.id,
-  })),
-  ...videos.map((v) => ({
-    src: `https://img.youtube.com/vi/${v.id}/sddefault.jpg`,
-    alt: v.title,
-    videoId: v.id,
-  })),
-]
 
 function AutoScrollCarousel() {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [playingVideo, setPlayingVideo] = useState<string | null>(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const dragStart = useRef({ x: 0, scrollLeft: 0 })
 
+  // Auto-scroll animation
   useEffect(() => {
     const el = scrollRef.current
     if (!el) return
 
     let animationId: number
-    let scrollPos = 0
-    const speed = 0.5
+    let scrollPos = el.scrollLeft
+    const speed = 0.4
+    let paused = false
 
     const scroll = () => {
-      scrollPos += speed
-      if (scrollPos >= el.scrollWidth / 2) {
-        scrollPos = 0
+      if (!paused) {
+        scrollPos += speed
+        if (scrollPos >= el.scrollWidth / 2) scrollPos = 0
+        el.scrollLeft = scrollPos
       }
-      el.scrollLeft = scrollPos
       animationId = requestAnimationFrame(scroll)
     }
 
     animationId = requestAnimationFrame(scroll)
 
-    const pause = () => cancelAnimationFrame(animationId)
-    const resume = () => { animationId = requestAnimationFrame(scroll) }
+    const pause = () => { paused = true }
+    const resume = () => { scrollPos = el.scrollLeft; paused = false }
 
     el.addEventListener('mouseenter', pause)
     el.addEventListener('mouseleave', resume)
     el.addEventListener('touchstart', pause, { passive: true })
-    el.addEventListener('touchend', resume)
+    el.addEventListener('touchend', () => setTimeout(resume, 3000))
 
     return () => {
       cancelAnimationFrame(animationId)
@@ -64,28 +49,53 @@ function AutoScrollCarousel() {
     }
   }, [])
 
+  // Drag-to-scroll
+  const onMouseDown = (e: React.MouseEvent) => {
+    const el = scrollRef.current
+    if (!el) return
+    setIsDragging(true)
+    dragStart.current = { x: e.pageX, scrollLeft: el.scrollLeft }
+  }
+
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return
+    const el = scrollRef.current
+    if (!el) return
+    const dx = e.pageX - dragStart.current.x
+    el.scrollLeft = dragStart.current.scrollLeft - dx
+  }
+
+  const onMouseUp = () => setIsDragging(false)
+
+  // Duplicate items for infinite loop
+  const items = [...videos, ...videos]
+
   return (
     <>
       <div
         ref={scrollRef}
-        className="flex gap-4 overflow-hidden"
-        style={{ scrollBehavior: 'auto' }}
+        className="flex gap-4 overflow-x-auto px-6 scrollbar-hide"
+        style={{ scrollBehavior: 'auto', cursor: isDragging ? 'grabbing' : 'grab', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
+        onMouseLeave={onMouseUp}
       >
-        {/* Duplicate for infinite scroll */}
-        {[...galleryImages, ...galleryImages].map((img, i) => (
+        {items.map((video, i) => (
           <div
-            key={i}
-            className="group relative aspect-video w-[320px] flex-shrink-0 overflow-hidden rounded-xl sm:w-[400px]"
+            key={`${video.id}-${i}`}
+            className="group relative aspect-video w-[280px] flex-shrink-0 overflow-hidden rounded-xl sm:w-[380px]"
           >
             <img
-              src={img.src}
-              alt={img.alt}
+              src={video.thumbnail}
+              alt={video.title}
               className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
               loading="lazy"
+              draggable={false}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
             <button
-              onClick={() => setPlayingVideo(img.videoId)}
+              onClick={() => setPlayingVideo(video.id)}
               className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100"
             >
               <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/90 text-primary-foreground shadow-lg transition-transform duration-300 hover:scale-110">
@@ -93,7 +103,7 @@ function AutoScrollCarousel() {
               </div>
             </button>
             <div className="absolute bottom-3 left-4 right-4">
-              <p className="text-sm font-medium text-white/90">{img.alt}</p>
+              <p className="line-clamp-2 text-sm font-medium text-white/90">{video.title}</p>
             </div>
           </div>
         ))}

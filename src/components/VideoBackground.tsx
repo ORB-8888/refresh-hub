@@ -33,30 +33,29 @@ interface YTPlayer {
   destroy: () => void
 }
 
-// Use the preloaded API promise from index.html, or load it as fallback
 const waitForYouTubeAPI = (): Promise<void> => {
   if (window.YT?.Player) return Promise.resolve()
   if (window.__ytApiReady) return window.__ytApiReady
   return new Promise((resolve) => {
     const check = setInterval(() => {
-      if (window.YT?.Player) {
-        clearInterval(check)
-        resolve()
-      }
+      if (window.YT?.Player) { clearInterval(check); resolve() }
     }, 50)
   })
 }
 
 interface Props {
   videos: string[]
+  onReady?: () => void
 }
 
-export default function VideoBackground({ videos }: Props) {
+export default function VideoBackground({ videos, onReady }: Props) {
   const playersRef = useRef<Map<number, YTPlayer>>(new Map())
   const containersRef = useRef<Map<number, HTMLDivElement>>(new Map())
   const [currentIndex, setCurrentIndex] = useState(0)
   const currentIndexRef = useRef(0)
-  const [ready, setReady] = useState(false)
+  const [visible, setVisible] = useState(false)
+  const onReadyRef = useRef(onReady)
+  onReadyRef.current = onReady
 
   const createPlayer = useCallback(
     (videoId: string, index: number) => {
@@ -90,7 +89,6 @@ export default function VideoBackground({ videos }: Props) {
             p.mute()
             if (index === 0) {
               p.playVideo()
-              setReady(true)
             } else {
               p.playVideo()
               setTimeout(() => {
@@ -99,6 +97,11 @@ export default function VideoBackground({ videos }: Props) {
             }
           },
           onStateChange: (event) => {
+            // First video starts playing — signal ready
+            if (index === 0 && event.data === window.YT.PlayerState.PLAYING) {
+              setVisible(true)
+              onReadyRef.current?.()
+            }
             if (index !== currentIndexRef.current) return
             if (event.data === window.YT.PlayerState.ENDED) {
               const next = (index + 1) % videos.length
@@ -122,10 +125,13 @@ export default function VideoBackground({ videos }: Props) {
       if (cancelled) return
       createPlayer(videos[0], 0)
 
+      // Load rest in background after first starts
       setTimeout(() => {
         if (cancelled) return
         for (let i = 1; i < videos.length; i++) {
-          createPlayer(videos[i], i)
+          setTimeout(() => {
+            if (!cancelled) createPlayer(videos[i], i)
+          }, (i - 1) * 300)
         }
       }, 800)
     }
@@ -178,7 +184,7 @@ export default function VideoBackground({ videos }: Props) {
             zIndex: index === currentIndex ? 1 : 0,
           }}
           initial={{ opacity: 0 }}
-          animate={{ opacity: index === currentIndex && ready ? 1 : 0 }}
+          animate={{ opacity: index === currentIndex && visible ? 1 : 0 }}
           transition={{ duration: 1.2 }}
         />
       ))}

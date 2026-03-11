@@ -12,7 +12,7 @@ export default function Footer() {
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-5">
         {/* Logo + Name */}
         <div className="flex flex-col items-center gap-3">
-          <img src="/logo.png" alt="Refresh" className="h-12 w-auto opacity-80" />
+          <img src="/logo.png" alt="Refresh" className="h-16 w-auto opacity-80" />
           <div className="flex items-center gap-4">
             {socials.map((s) => (
               <a

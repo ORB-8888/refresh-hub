@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
@@ -9,12 +9,7 @@ import SocialFeed from './components/SocialFeed'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 
-function LoadingScreen({ onComplete }: { onComplete: () => void }) {
-  useEffect(() => {
-    const timer = setTimeout(onComplete, 2200)
-    return () => clearTimeout(timer)
-  }, [onComplete])
-
+function LoadingScreen() {
   return (
     <motion.div
       className="fixed inset-0 z-50 flex items-center justify-center bg-background"
@@ -25,7 +20,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
         <motion.img
           src="/logo.png"
           alt="Refresh"
-          className="h-36 w-auto sm:h-44"
+          className="h-40 w-auto sm:h-52"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
@@ -36,19 +31,42 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
           animate={{ width: 240 }}
           transition={{ duration: 1.4, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
         />
+        <motion.p
+          className="text-xs tracking-[0.3em] uppercase text-muted-foreground"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1, duration: 0.6 }}
+        >
+          Loading experience
+        </motion.p>
       </motion.div>
     </motion.div>
   )
 }
 
 export default function App() {
-  const [loading, setLoading] = useState(true)
+  const [videoReady, setVideoReady] = useState(false)
+  const [minTimePassed, setMinTimePassed] = useState(false)
+  const loading = !videoReady || !minTimePassed
+
+  useEffect(() => {
+    const timer = setTimeout(() => setMinTimePassed(true), 2000)
+    return () => clearTimeout(timer)
+  }, [])
+
+  const onVideoReady = useCallback(() => setVideoReady(true), [])
 
   return (
     <>
       <AnimatePresence mode="wait">
-        {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
+        {loading && <LoadingScreen />}
       </AnimatePresence>
+
+      {/* Always render Hero so video starts loading immediately */}
+      <div style={{ visibility: loading ? 'hidden' : 'visible', position: loading ? 'fixed' : 'relative', inset: 0 }}>
+        <Navbar />
+        <Hero onVideoReady={onVideoReady} />
+      </div>
 
       {!loading && (
         <motion.div
@@ -56,8 +74,6 @@ export default function App() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6 }}
         >
-          <Navbar />
-          <Hero />
           <About />
           <Services />
           <Showcase />
