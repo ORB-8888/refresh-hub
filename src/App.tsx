@@ -64,21 +64,26 @@ export default function App() {
 
   return (
     <>
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         {loading && <LoadingScreen />}
       </AnimatePresence>
 
-      {/* Always render Hero so video preloads immediately */}
-      <div style={{ visibility: loading ? 'hidden' : 'visible', position: loading ? 'fixed' : 'relative', inset: 0 }}>
+      {/* Always render Hero so video preloads immediately — fades in under loading screen */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: loading ? 0 : 1 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        style={{ position: loading ? 'fixed' : 'relative', inset: 0 }}
+      >
         <Navbar />
         <Hero onVideoReady={onVideoReady} />
-      </div>
+      </motion.div>
 
       {!loading && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
         >
           <About />
           <Services />
