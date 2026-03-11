@@ -1,7 +1,10 @@
 import { motion } from 'framer-motion'
 import { CaretDown } from '@phosphor-icons/react'
+import VideoBackground from './VideoBackground'
 
 const ease = [0.22, 1, 0.36, 1] as const
+
+const backgroundVideos = ['0Jg4ntu9iFU', '_jNsxPWiDms', 'CKBiUs_DPpc']
 
 const stagger = {
   hidden: {},
@@ -15,45 +18,41 @@ const fadeUp = {
 
 export default function Hero() {
   return (
-    <section className="relative flex min-h-screen items-center justify-center overflow-hidden px-6">
-      {/* Animated background orbs */}
-      <div className="pointer-events-none absolute inset-0">
-        <motion.div
-          className="absolute left-1/4 top-1/4 h-[500px] w-[500px] rounded-full bg-primary/[0.03] blur-[120px]"
-          animate={{ x: [0, 30, 0], y: [0, -20, 0] }}
-          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <motion.div
-          className="absolute bottom-1/4 right-1/4 h-[400px] w-[400px] rounded-full bg-accent/[0.04] blur-[100px]"
-          animate={{ x: [0, -20, 0], y: [0, 30, 0] }}
-          transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      </div>
+    <section className="relative flex h-screen items-center justify-center overflow-hidden">
+      {/* YouTube video background */}
+      <VideoBackground videos={backgroundVideos} />
 
       <motion.div
-        className="relative z-10 mx-auto max-w-4xl text-center"
+        className="relative z-20 mx-auto max-w-4xl px-6 text-center"
         variants={stagger}
         initial="hidden"
         animate="show"
       >
-        <motion.div variants={fadeUp} className="mb-6">
-          <span className="inline-block rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.2em] text-primary">
+        {/* Logo in circle */}
+        <motion.div variants={fadeUp} className="mb-8 flex justify-center">
+          <div className="flex h-28 w-28 items-center justify-center rounded-full border border-white/15 bg-black/40 p-5 backdrop-blur-sm sm:h-32 sm:w-32 sm:p-6">
+            <img src="/logo.png" alt="Refresh" className="h-full w-full object-contain" />
+          </div>
+        </motion.div>
+
+        <motion.div variants={fadeUp} className="mb-5">
+          <span className="inline-block rounded-full border border-primary/30 bg-black/30 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.2em] text-primary backdrop-blur-sm">
             International Luxury Real Estate
           </span>
         </motion.div>
 
         <motion.h1
           variants={fadeUp}
-          className="mb-6 text-5xl font-bold leading-[1.1] tracking-tight sm:text-6xl md:text-7xl lg:text-8xl"
+          className="mb-5 text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl"
         >
           <span className="text-gradient-gold">Premium</span>
           <br />
-          <span className="text-foreground">Living Redefined</span>
+          <span className="text-white">Living Redefined</span>
         </motion.h1>
 
         <motion.p
           variants={fadeUp}
-          className="mx-auto mb-10 max-w-xl text-lg text-muted-foreground sm:text-xl"
+          className="mx-auto mb-8 max-w-xl text-base text-white/70 sm:text-lg"
         >
           Exclusive apartments, penthouses & villas.
           <br className="hidden sm:block" />
@@ -70,7 +69,7 @@ export default function Hero() {
           </a>
           <a
             href="#contact"
-            className="rounded-lg border border-border bg-card px-8 py-3.5 text-sm font-semibold text-foreground transition-all duration-300 hover:border-primary/30 hover:bg-card-hover"
+            className="rounded-lg border border-white/20 bg-white/5 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:border-white/40 hover:bg-white/10"
           >
             Contact Us
           </a>
@@ -78,7 +77,7 @@ export default function Hero() {
 
         <motion.div
           variants={fadeUp}
-          className="mt-16 flex items-center justify-center gap-12 text-muted-foreground"
+          className="mt-12 flex items-center justify-center gap-10 sm:gap-12"
         >
           {[
             { value: '50+', label: 'Premium Listings' },
@@ -87,20 +86,23 @@ export default function Hero() {
           ].map((stat) => (
             <div key={stat.label} className="text-center">
               <div className="text-2xl font-bold text-gradient-gold sm:text-3xl">{stat.value}</div>
-              <div className="mt-1 text-xs tracking-wide">{stat.label}</div>
+              <div className="mt-1 text-xs tracking-wide text-white/50">{stat.label}</div>
             </div>
           ))}
         </motion.div>
       </motion.div>
 
-      {/* Scroll indicator */}
+      {/* Scroll indicator — prominent arrow */}
       <motion.a
         href="#about"
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        className="absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-2"
         animate={{ y: [0, 8, 0] }}
         transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
       >
-        <CaretDown size={24} className="text-muted-foreground" />
+        <span className="text-[10px] font-medium uppercase tracking-[0.25em] text-white/40">
+          Scroll
+        </span>
+        <CaretDown size={28} weight="bold" className="text-white/50" />
       </motion.a>
     </section>
   )

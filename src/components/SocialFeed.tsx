@@ -1,6 +1,6 @@
 import { motion, useInView } from 'framer-motion'
-import { useRef, useEffect } from 'react'
-import { InstagramLogo, FacebookLogo, TiktokLogo, XLogo } from '@phosphor-icons/react'
+import { useRef } from 'react'
+import { InstagramLogo, FacebookLogo, TiktokLogo, XLogo, YoutubeLogo } from '@phosphor-icons/react'
 
 const ease = [0.22, 1, 0.36, 1] as const
 
@@ -30,6 +30,14 @@ const socialLinks = [
     description: 'Watch property tours, behind-the-scenes, and real estate tips.',
   },
   {
+    name: 'YouTube',
+    icon: YoutubeLogo,
+    url: 'https://www.youtube.com/@refreshhub',
+    handle: '@refreshhub',
+    color: 'oklch(0.60 0.22 30)',
+    description: 'Property walkthroughs, neighborhood tours, and market analysis.',
+  },
+  {
     name: 'X / Twitter',
     icon: XLogo,
     url: 'https://x.com/RefreshHub',
@@ -38,49 +46,6 @@ const socialLinks = [
     description: 'Real-time market updates and luxury real estate insights.',
   },
 ]
-
-function FacebookEmbed() {
-  useEffect(() => {
-    const existingScript = document.getElementById('fb-sdk')
-    if (!existingScript) {
-      const script = document.createElement('script')
-      script.id = 'fb-sdk'
-      script.async = true
-      script.defer = true
-      script.crossOrigin = 'anonymous'
-      script.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v21.0'
-      document.body.appendChild(script)
-    }
-    if (window.FB) {
-      window.FB.XFBML.parse()
-    }
-  }, [])
-
-  return (
-    <div className="overflow-hidden rounded-xl border border-border/50 bg-card">
-      <div
-        className="fb-page"
-        data-href="https://www.facebook.com/RefreshLuxuryRealEstateHub/"
-        data-tabs="timeline"
-        data-width="500"
-        data-height="600"
-        data-small-header="true"
-        data-adapt-container-width="true"
-        data-hide-cover="false"
-        data-show-facepile="false"
-      >
-        <blockquote
-          cite="https://www.facebook.com/RefreshLuxuryRealEstateHub/"
-          className="fb-xfbml-parse-ignore"
-        >
-          <a href="https://www.facebook.com/RefreshLuxuryRealEstateHub/">
-            Refresh Luxury Real Estate Hub
-          </a>
-        </blockquote>
-      </div>
-    </div>
-  )
-}
 
 export default function SocialFeed() {
   const ref = useRef(null)
@@ -109,7 +74,7 @@ export default function SocialFeed() {
         </motion.div>
 
         {/* Social link cards */}
-        <div className="mb-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {socialLinks.map((social, i) => (
             <motion.a
               key={social.name}
@@ -121,11 +86,17 @@ export default function SocialFeed() {
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.1 * i, ease }}
             >
-              <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full blur-[50px] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+              <div
+                className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full blur-[50px] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
                 style={{ backgroundColor: social.color }}
               />
               <div className="relative z-10">
-                <social.icon size={32} weight="duotone" className="mb-4 transition-colors duration-300" style={{ color: social.color }} />
+                <social.icon
+                  size={32}
+                  weight="duotone"
+                  className="mb-4 transition-colors duration-300"
+                  style={{ color: social.color }}
+                />
                 <h3 className="mb-1 font-semibold">{social.name}</h3>
                 <p className="mb-3 text-xs text-muted-foreground">{social.handle}</p>
                 <p className="text-sm leading-relaxed text-muted-foreground">{social.description}</p>
@@ -133,19 +104,6 @@ export default function SocialFeed() {
             </motion.a>
           ))}
         </div>
-
-        {/* Facebook Page embed */}
-        <motion.div
-          className="mx-auto max-w-lg"
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.5, ease }}
-        >
-          <h3 className="mb-6 text-center text-lg font-semibold text-muted-foreground">
-            Latest from Facebook
-          </h3>
-          <FacebookEmbed />
-        </motion.div>
       </div>
     </section>
   )
