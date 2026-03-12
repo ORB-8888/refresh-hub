@@ -10,7 +10,7 @@ const contactInfo = [
     label: 'Visit Us',
     value: 'Merab Aleksidze St. 12',
     sub: 'Tbilisi, Georgia 0171',
-    href: 'https://maps.google.com/?cid=16861927899849324521',
+    href: 'https://www.google.com/maps?cid=16847236094243059689',
   },
   {
     icon: Phone,
