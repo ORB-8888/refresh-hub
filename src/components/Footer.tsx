@@ -36,8 +36,8 @@ export default function Footer() {
       </div>
 
       {/* Author credits */}
-      <div className="border-t border-border/30 px-6 py-5">
-        <p className="whitespace-nowrap text-center text-sm tracking-wide text-white">
+      <div className="border-t border-border/30 px-4 py-5">
+        <p className="mx-auto w-fit whitespace-nowrap text-center text-[11px] tracking-wide text-white min-[380px]:text-xs sm:text-sm">
           Designed & developed by{' '}
           <a
             href="https://www.linkedin.com/in/g-orbeliani/"
