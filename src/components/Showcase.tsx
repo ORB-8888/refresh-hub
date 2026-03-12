@@ -1,7 +1,10 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef, useEffect, useState } from 'react'
 import { Play } from '@phosphor-icons/react'
-import allVideos from '../data/videos.json'
+import rawVideos from '../data/videos.json'
+
+// Gallery shows only shorts
+const allVideos = rawVideos.filter((v) => v.type === 'short')
 
 const ease = [0.22, 1, 0.36, 1] as const
 
