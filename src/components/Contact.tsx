@@ -62,27 +62,54 @@ export default function Contact() {
         </motion.div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {contactInfo.map((item, i) => (
-            <motion.a
-              key={item.label}
-              href={item.href}
-              target={item.href.startsWith('http') ? '_blank' : undefined}
-              rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-              className="group rounded-xl border border-border/50 bg-card p-5 text-center transition-all duration-500 hover:border-primary/20 hover:bg-card-hover hover:shadow-[0_0_30px_oklch(0.75_0.12_85_/_0.08)]"
-              initial={{ opacity: 0, y: 24 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.1 * i, ease }}
-            >
-              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary transition-all duration-300 group-hover:bg-primary/20 group-hover:shadow-[0_0_15px_oklch(0.75_0.12_85_/_0.15)]">
-                <item.icon size={24} weight="duotone" />
-              </div>
-              <div className="mb-0.5 text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
-                {item.label}
-              </div>
-              <div className="mb-0.5 text-sm font-semibold text-foreground">{item.value}</div>
-              <div className="text-xs text-muted-foreground">{item.sub}</div>
-            </motion.a>
-          ))}
+          {contactInfo.map((item, i) => {
+            const isEmail = item.href.startsWith('mailto:')
+            const isExternal = item.href.startsWith('http')
+            const cardClass = "group rounded-xl border border-border/50 bg-card p-5 text-center transition-all duration-500 hover:border-primary/20 hover:bg-card-hover hover:shadow-[0_0_30px_oklch(0.75_0.12_85_/_0.08)]"
+            const inner = (
+              <>
+                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary transition-all duration-300 group-hover:bg-primary/20 group-hover:shadow-[0_0_15px_oklch(0.75_0.12_85_/_0.15)]">
+                  <item.icon size={24} weight="duotone" />
+                </div>
+                <div className="mb-0.5 text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+                  {item.label}
+                </div>
+                <div className="mb-0.5 text-sm font-semibold text-foreground select-all">{item.value}</div>
+                <div className="text-xs text-muted-foreground">{item.sub}</div>
+              </>
+            )
+
+            if (isEmail) {
+              return (
+                <motion.div
+                  key={item.label}
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.6, delay: 0.1 * i, ease }}
+                >
+                  {/* Mobile: mailto link */}
+                  <a href={item.href} className={`${cardClass} md:hidden`}>{inner}</a>
+                  {/* Desktop: selectable text, no mailto */}
+                  <div className={`${cardClass} hidden cursor-default md:block`}>{inner}</div>
+                </motion.div>
+              )
+            }
+
+            return (
+              <motion.a
+                key={item.label}
+                href={item.href}
+                target={isExternal ? '_blank' : undefined}
+                rel={isExternal ? 'noopener noreferrer' : undefined}
+                className={cardClass}
+                initial={{ opacity: 0, y: 24 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.1 * i, ease }}
+              >
+                {inner}
+              </motion.a>
+            )
+          })}
         </div>
 
         <motion.div

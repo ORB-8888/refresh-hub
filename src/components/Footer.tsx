@@ -36,25 +36,27 @@ export default function Footer() {
       </div>
 
       {/* Author credits */}
-      <div className="border-t border-border/30 px-6 py-4">
-        <p className="whitespace-nowrap text-center text-[11px] tracking-wide text-muted-foreground/60">
+      <div className="border-t border-border/30 px-6 py-5">
+        <p className="whitespace-nowrap text-center text-sm tracking-wide text-white">
           Designed & developed by{' '}
           <a
             href="https://www.linkedin.com/in/g-orbeliani/"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-medium text-muted-foreground/80 transition-colors duration-300 hover:text-primary"
+            className="font-semibold transition-colors duration-300 hover:brightness-125"
+            style={{ color: 'oklch(0.65 0.18 260)' }}
           >
             Giorgi Orbeliani
           </a>
           {' '}&middot;{' '}
           <a
-            href="https://expl.com"
+            href="https://expl.one"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-semibold tracking-wider text-muted-foreground/80 transition-colors duration-300 hover:text-primary"
+            className="font-bold tracking-wider transition-colors duration-300 hover:brightness-125"
+            style={{ color: 'oklch(0.65 0.18 310)' }}
           >
-            EXPL.COM
+            EXPL.ONE
           </a>
         </p>
       </div>
