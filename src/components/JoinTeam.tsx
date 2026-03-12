@@ -6,7 +6,7 @@ const ease = [0.22, 1, 0.36, 1] as const
 
 const WHATSAPP_NUMBER = '995557124000'
 const WHATSAPP_MESSAGE = encodeURIComponent(
-  'Hello, I am interested in joining the REFRESH HUB team. I would like to learn more about available opportunities.'
+  'Hello, I am interested in joining the REFRESH HUB® team. I would like to learn more about available opportunities.'
 )
 
 export default function JoinTeam() {
