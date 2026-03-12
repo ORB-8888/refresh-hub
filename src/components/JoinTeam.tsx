@@ -76,20 +76,19 @@ export default function JoinTeam() {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.2, ease }}
           >
-            <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full blur-[50px] opacity-0 transition-opacity duration-500 group-hover:opacity-100" style={{ backgroundColor: 'oklch(0.65 0.18 145)' }} />
+            <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-primary/30 blur-[50px] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
             <div className="relative z-10 flex flex-col items-center text-center">
               <WhatsappLogo
                 size={36}
                 weight="duotone"
-                className="mb-3"
-                style={{ color: 'oklch(0.65 0.18 145)' }}
+                className="mb-3 text-primary"
               />
               <h3 className="mb-1 font-semibold">WhatsApp</h3>
               <p className="mb-3 text-sm text-muted-foreground">
                 Quick chat about opportunities
               </p>
-              <span className="text-sm font-medium" style={{ color: 'oklch(0.65 0.18 145)' }}>
-                Message Us
+              <span className="text-sm font-medium text-primary">
+                Contact Us
               </span>
             </div>
           </motion.a>

@@ -10,7 +10,7 @@ const contactInfo = [
     label: 'Visit Us',
     value: 'Merab Aleksidze St. 12',
     sub: 'Tbilisi, Georgia 0171',
-    href: 'https://www.google.com/maps?q=Refresh+Luxury+Hub,+12+Merab+Aleksidze+St,+Tbilisi+0171&ftid=0x404473e45ba98c55:0xe9cd67f79c7f37e9',
+    href: 'https://www.google.com/maps/place/?q=place_id:ChIJVYypW-RzREARee5_nPdn7ek',
   },
   {
     icon: Phone,
