@@ -7,6 +7,7 @@ import Services from './components/Services'
 import Showcase from './components/Showcase'
 import SocialFeed from './components/SocialFeed'
 import Contact from './components/Contact'
+import JoinTeam from './components/JoinTeam'
 import Footer from './components/Footer'
 
 function LoadingScreen() {
@@ -84,6 +85,7 @@ export default function App() {
           <Services />
           <Showcase />
           <SocialFeed />
+          <JoinTeam />
           <Contact />
           <Footer />
         </motion.div>

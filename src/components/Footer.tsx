@@ -34,6 +34,30 @@ export default function Footer() {
           &copy; 2026 Refresh Luxury Real Estate Hub. All rights reserved.
         </span>
       </div>
+
+      {/* Author credits */}
+      <div className="border-t border-border/30 px-6 py-4">
+        <p className="whitespace-nowrap text-center text-[11px] tracking-wide text-muted-foreground/60">
+          Designed & developed by{' '}
+          <a
+            href="https://www.linkedin.com/in/g-orbeliani/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-muted-foreground/80 transition-colors duration-300 hover:text-primary"
+          >
+            Giorgi Orbeliani
+          </a>
+          {' '}&middot;{' '}
+          <a
+            href="https://expl.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold tracking-wider text-muted-foreground/80 transition-colors duration-300 hover:text-primary"
+          >
+            EXPL.COM
+          </a>
+        </p>
+      </div>
     </footer>
   )
 }

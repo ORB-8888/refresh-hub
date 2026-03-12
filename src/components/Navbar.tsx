@@ -6,7 +6,8 @@ const links = [
   { label: 'About', href: '#about' },
   { label: 'Services', href: '#services' },
   { label: 'Gallery', href: '#gallery' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Socials', href: '#socials' },
+  { label: 'Careers', href: '#careers' },
 ]
 
 export default function Navbar() {
@@ -93,7 +94,7 @@ export default function Navbar() {
               className="mt-4 rounded-lg border border-primary/30 bg-primary/10 px-6 py-3 text-lg font-medium text-primary"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35, duration: 0.4 }}
+              transition={{ delay: 0.45, duration: 0.4 }}
             >
               Get in Touch
             </motion.a>

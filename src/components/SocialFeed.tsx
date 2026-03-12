@@ -36,7 +36,7 @@ export default function SocialFeed() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section className="relative px-6 py-14 sm:py-20" ref={ref}>
+    <section id="socials" className="relative px-6 py-14 sm:py-20" ref={ref}>
       <div className="absolute left-1/2 top-0 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-border to-transparent" />
 
       <div className="mx-auto max-w-6xl">

@@ -53,14 +53,13 @@ export default function Hero({ onVideoReady }: Props) {
           <span className="text-white">Living Redefined</span>
         </motion.h1>
 
-        <motion.p
+        <motion.div
           variants={fadeUp}
-          className="mx-auto mb-5 max-w-md text-sm text-white/70 sm:mb-6 sm:max-w-xl sm:text-lg"
+          className="mx-auto mb-5 flex max-w-md flex-col items-center gap-0.5 sm:mb-6 sm:max-w-xl"
         >
-          Exclusive apartments, penthouses & villas.
-          <br className="hidden sm:block" />
-          Strong marketing & expert negotiation.
-        </motion.p>
+          <p className="whitespace-nowrap text-sm text-white/70 sm:text-lg">Exclusive apartments, penthouses & villas</p>
+          <p className="whitespace-nowrap text-sm text-white/70 sm:text-lg">Strong marketing & expert negotiation</p>
+        </motion.div>
 
         <motion.div variants={fadeUp} className="flex flex-wrap items-center justify-center gap-3">
           <a
